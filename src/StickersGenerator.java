@@ -1,7 +1,12 @@
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.Shape;
+import java.awt.font.FontRenderContext;
+import java.awt.font.TextLayout;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -47,9 +52,28 @@ public class StickersGenerator {
         int textWidth = (int) rectangle.getWidth();
         // posição para inserir o texto
         int textPositionX = (widthImg*20)/100; // para pegar centro da imagem (widthImg - textWidth)/2
-        graphics.drawString(text, textPositionX, newHeightImg-100);
+        int textPositionY = newHeightImg-100;
+        graphics.drawString(text, textPositionX, textPositionY);
+
         // adicionando sticker personalizado
         graphics.drawImage(mySticker, widthImg-320,newHeightImg-320 , null);
+        
+        // Fazer um contorno na fonte do texto (Outline)
+        FontRenderContext fontRenderContext = graphics.getFontRenderContext();
+        var textLayout = new TextLayout(text, font, fontRenderContext);
+
+        Shape outline = textLayout.getOutline(null);
+        AffineTransform transform = graphics.getTransform();
+        transform.translate(textPositionX, textPositionY);
+        graphics.setTransform(transform);
+
+        var outlineStroke = new BasicStroke(widthImg * 0.004f);
+        graphics.setStroke(outlineStroke);
+
+        graphics.setColor(Color.BLACK);
+        graphics.draw(outline);
+        graphics.setClip(outline);
+
 
         // escrever a nova imagem em um arquivo
         // var pathName = "leave/sticker.png";

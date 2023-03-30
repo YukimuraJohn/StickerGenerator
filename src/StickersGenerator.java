@@ -1,6 +1,8 @@
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,7 +23,7 @@ public class StickersGenerator {
         // criar nova imagem em memória com transparência e com tamanho novo
         int widthImg = originalImage.getWidth();
         int heightImg = originalImage.getHeight();
-        int newHeightImg = heightImg + 350;
+        int newHeightImg = heightImg + 320;
         BufferedImage newImage = new BufferedImage(widthImg, newHeightImg, BufferedImage.TRANSLUCENT);
         
         // Extra read my Stick
@@ -33,14 +35,21 @@ public class StickersGenerator {
         graphics.drawImage(originalImage, 0, 0, null);
 
         // configurar a fonte e setando a fonte
-        Font font = new Font(Font.SANS_SERIF, Font.BOLD, 64);
-        graphics.setColor(Color.lightGray);
+        Font font = new Font("Impact", Font.BOLD, 72);
+        graphics.setColor(Color.YELLOW);
         graphics.setFont(font);
 
         // escrever uma frase iconica na nova imagem
-        graphics.drawString("Brabo Demais", (widthImg*20)/100, newHeightImg-100);
+        String text = "Brabo Demais";
+        // pegar o tamanho do texto
+        FontMetrics fontMetrics = graphics.getFontMetrics();
+        Rectangle2D rectangle = fontMetrics.getStringBounds(text, graphics);
+        int textWidth = (int) rectangle.getWidth();
+        // posição para inserir o texto
+        int textPositionX = (widthImg*20)/100; // para pegar centro da imagem (widthImg - textWidth)/2
+        graphics.drawString(text, textPositionX, newHeightImg-100);
         // adicionando sticker personalizado
-        graphics.drawImage(mySticker, widthImg-350,newHeightImg-350 , null);
+        graphics.drawImage(mySticker, widthImg-320,newHeightImg-320 , null);
 
         // escrever a nova imagem em um arquivo
         // var pathName = "leave/sticker.png";
@@ -48,13 +57,13 @@ public class StickersGenerator {
         // Fazendo a criação do diretório caso o mesmo não exista
         String dirName = "leave/";
         if (!new File(dirName).exists()){
-            System.out.println("diretório não existe e será criado");
+            // System.out.println("diretório não existe e será criado");
             new File(dirName).mkdirs();
             ImageIO.write(newImage, "png", new File(dirName + fileName));
-        }else {
-            System.out.println("diretório existe e então será criado o arquivo");
-            ImageIO.write(newImage, "png", new File(dirName + fileName));
         }
+        // System.out.println("diretório existe e então será criado o arquivo");
+        ImageIO.write(newImage, "png", new File(dirName + fileName));
+        
 
         
     };

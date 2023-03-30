@@ -52,7 +52,7 @@ public class StickersGenerator {
         int textWidth = (int) rectangle.getWidth();
         // posição para inserir o texto
         int textPositionX = (widthImg*20)/100; // para pegar centro da imagem (widthImg - textWidth)/2
-        int textPositionY = newHeightImg-100;
+        int textPositionY = newHeightImg-160;
         graphics.drawString(text, textPositionX, textPositionY);
 
         // adicionando sticker personalizado
